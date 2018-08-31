@@ -1,3 +1,5 @@
+package model;
+
 import javafx.beans.property.BooleanProperty;
 
 public class Board {
@@ -48,7 +50,7 @@ public class Board {
 	 * @param j
 	 * @return
 	 */
-	public int liveNeighbors(int i, int j) {
+	private int liveNeighbors(int i, int j) {
 		int liveNeighborCount = 0;
 		if (field[(i - 1 + height) % height][(j - 1 + width) % width].get())
 			liveNeighborCount++;
