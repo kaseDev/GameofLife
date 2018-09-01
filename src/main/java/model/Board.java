@@ -8,7 +8,7 @@ import java.util.TimerTask;
 
 public class Board {
 
-	private BooleanProperty field[][];
+	private CellModel[][] field;
 	private boolean buffer[][];
 	private int width, height;
 	private boolean running;
@@ -19,13 +19,13 @@ public class Board {
 		this.width = width;
 		this.height = height;
 		running = false;
-		field = new BooleanProperty[width][height];
+		field = new CellModel[width][height];
 		buffer = new boolean[width][height];
 		running = false;
 
 		for (int i = 0; i < field.length; i++)
 			for (int j = 0; j < field.length; j++)
-				field[i][j] = new SimpleBooleanProperty();
+				field[i][j] = new CellModel();
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class Board {
 				buffer[i][j] = isAlive(i, j);
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
-				field[i][j].set(buffer[i][j]);
+				field[i][j].setState(buffer[i][j]);
 		buffer = new boolean[width][height];
 	}
 
@@ -69,7 +69,7 @@ public class Board {
 	 */
 	private boolean isAlive(int i, int j) {
 		int neighborCount = liveNeighbors(i, j);
-		if (field[i][j].get())
+		if (field[i][j].getState())
 			return neighborCount >= 2 && neighborCount <= 3;
 		return neighborCount == 3;
 	}
@@ -87,21 +87,21 @@ public class Board {
 //		System.out.println("(" + (i - 1 + height) % height + ", " + j + 1 % width + ")");
 
 
-		if (field[(i - 1 + height) % height][(j - 1 + width) % width].get())
+		if (field[(i - 1 + height) % height][(j - 1 + width) % width].getState())
 			liveNeighborCount++;
-		if (field[(i - 1 + height) % height][j].get())
+		if (field[(i - 1 + height) % height][j].getState())
 			liveNeighborCount++;
-		if (field[(i - 1 + height) % height][(j + 1) % width].get())
+		if (field[(i - 1 + height) % height][(j + 1) % width].getState())
 			liveNeighborCount++;
-		if (field[i][(j - 1 + width) % width].get())
+		if (field[i][(j - 1 + width) % width].getState())
 			liveNeighborCount++;
-		if (field[i][(j + 1) % width].get())
+		if (field[i][(j + 1) % width].getState())
 			liveNeighborCount++;
-		if (field[(i + 1) % height][(j - 1 + width) % width].get())
+		if (field[(i + 1) % height][(j - 1 + width) % width].getState())
 			liveNeighborCount++;
-		if (field[(i + 1) % height][j].get())
+		if (field[(i + 1) % height][j].getState())
 			liveNeighborCount++;
-		if (field[(i + 1) % height][(j + 1) % width].get())
+		if (field[(i + 1) % height][(j + 1) % width].getState())
 			liveNeighborCount++;
 		return liveNeighborCount;
 	}
@@ -114,7 +114,7 @@ public class Board {
 	 * @param j
 	 */
 	public void bindToCell(BooleanProperty stateProperty, int i, int j) {
-		field[i][j].bindBidirectional(stateProperty);
+		field[i][j].stateProperty().bindBidirectional(stateProperty);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class Board {
 	 * @param j
 	 */
 	public void unBindToCell(BooleanProperty stateProperty, int i, int j) {
-		field[i][j].unbindBidirectional(stateProperty);
+		field[i][j].stateProperty().unbindBidirectional(stateProperty);
 	}
 
 	public boolean isPlaying() {

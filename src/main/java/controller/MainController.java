@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import model.Board;
-import view.Cell;
+import view.CellView;
 
 public class MainController {
 
@@ -17,9 +17,9 @@ public class MainController {
 	public void initialize() {
 		for (int i = 0; i < 45; i++) {
 			for (int j = 0; j < 45; j++) {
-				Cell cell = new Cell(i, j);
-				board.bindToCell(cell.getStateProperty(), i, j);
-				pane.add(cell, i, j);
+				CellView cellView = new CellView(i, j);
+				board.bindToCell(cellView.getStateProperty(), i, j);
+				pane.add(cellView, i, j);
 			}
 		}
 	}

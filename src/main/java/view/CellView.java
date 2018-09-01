@@ -10,13 +10,13 @@ import javafx.scene.shape.Rectangle;
 
 import java.io.IOException;
 
-public class Cell extends AnchorPane {
+public class CellView extends AnchorPane {
 
 	@FXML private Rectangle rect;
 	private BooleanProperty state = new SimpleBooleanProperty(false);
 	private int x,y;
 
-	public Cell(int i, int j) {
+	public CellView(int i, int j) {
 		uglySetUpCode();
 		setOnMouseClicked(e -> reactToClick());
 		state.addListener(e -> reactToStateChange());
