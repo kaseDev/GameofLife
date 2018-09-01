@@ -1,3 +1,4 @@
+import controller.TitleScreenController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,8 +18,9 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		FXMLLoader loader = new FXMLLoader();
 		try {
-			loader.setLocation(getClass().getResource("main.fxml"));
+			loader.setLocation(getClass().getResource("title_screen.fxml"));
 			Parent parent = loader.load();
+			((TitleScreenController) loader.getController()).setPrimaryStage(primaryStage);
 			Scene scene = new Scene(parent);
 			primaryStage.setScene(scene);
 			primaryStage.show();
