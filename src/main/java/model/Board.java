@@ -1,7 +1,6 @@
 package model;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -9,7 +8,7 @@ import java.util.TimerTask;
 public class Board {
 
 	private CellModel[][] field;
-	private boolean buffer[][];
+	private CellModel[][] buffer;
 	private int width, height;
 	private boolean running;
 
@@ -20,12 +19,14 @@ public class Board {
 		this.height = height;
 		running = false;
 		field = new CellModel[width][height];
-		buffer = new boolean[width][height];
+		buffer = new CellModel[width][height];
 		running = false;
 
 		for (int i = 0; i < field.length; i++)
-			for (int j = 0; j < field.length; j++)
+			for (int j = 0; j < field.length; j++) {
 				field[i][j] = new CellModel();
+				buffer[i][j] = new CellModel();
+			}
 	}
 
 	/**
@@ -53,11 +54,10 @@ public class Board {
 	private void calculateNextStep() {
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
-				buffer[i][j] = isAlive(i, j);
+				buffer[i][j].setState(isAlive(i, j));
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
-				field[i][j].setState(buffer[i][j]);
-		buffer = new boolean[width][height];
+				field[i][j].setState(buffer[i][j].getState());
 	}
 
 	/**
