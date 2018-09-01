@@ -1,29 +1,63 @@
 package model;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class CellModel {
 
-	private BooleanProperty state;
+	private IntegerProperty age;
+	private IntegerProperty color;
 
 	public CellModel() {
-		state = new SimpleBooleanProperty(false);
+		age = new SimpleIntegerProperty(-1);
+		color = new SimpleIntegerProperty(-1);
 	}
 
-	public CellModel(boolean state) {
-		this.state = new SimpleBooleanProperty(state);
+	public CellModel(int age, int color) {
+		this.age = new SimpleIntegerProperty(age);
+		this.color = new SimpleIntegerProperty(color);
 	}
 
-	public boolean getState() {
-		return state.get();
+	public CellModel(CellModel copy) {
+		this.age = new SimpleIntegerProperty(copy.getAge());
+		this.color = new SimpleIntegerProperty(copy.getColor());
 	}
 
-	public BooleanProperty stateProperty() {
-		return state;
+	public int getAge() {
+		return age.get();
 	}
 
-	public void setState(boolean state) {
-		this.state.set(state);
+	public IntegerProperty ageProperty() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age.set(age);
+	}
+
+	public int getColor() {
+		return color.get();
+	}
+
+	public IntegerProperty colorProperty() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color.set(color);
+	}
+
+	public void clone(CellModel model) {
+		this.age.set(model.age.get());
+		this.color.set(model.color.get());
+	}
+
+	public boolean isAlive() {
+		return age.get() != -1;
+	}
+
+	public void bind(CellModel cellModel) {
+		this.age.bindBidirectional(cellModel.age);
+		this.color.bindBidirectional(cellModel.color);
 	}
 }

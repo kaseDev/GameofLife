@@ -17,8 +17,7 @@ public class MainController {
 	public void initialize() {
 		for (int i = 0; i < 45; i++) {
 			for (int j = 0; j < 45; j++) {
-				CellView cellView = new CellView(i, j);
-				board.bindToCell(cellView.getStateProperty(), i, j);
+				CellView cellView = new CellView(i, j, board.getCellModel(i, j));
 				pane.add(cellView, i, j);
 			}
 		}
@@ -31,6 +30,11 @@ public class MainController {
 			playButton.setText("Pause");
 		else
 			playButton.setText("Play");
+	}
+
+	@FXML
+	public void oneStep() {
+		board.calculateNextStep();
 	}
 
 }

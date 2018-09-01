@@ -1,6 +1,7 @@
 package model;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -51,13 +52,13 @@ public class Board {
 	 * Calculates the state of the entire board for the next step and then
 	 * stores refreshes the board with the new values.
 	 */
-	private void calculateNextStep() {
+	public void calculateNextStep() {
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
-				buffer[i][j].setState(isAlive(i, j));
+				buffer[i][j] = futureState(i, j);
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
-				field[i][j].setState(buffer[i][j].getState());
+				field[i][j].clone(buffer[i][j]);
 	}
 
 	/**
@@ -65,13 +66,21 @@ public class Board {
 	 * provided coordinates is alive or dead.
 	 * @param i
 	 * @param j
-	 * @return
+	 * @return TODO bug should probably around here!
 	 */
-	private boolean isAlive(int i, int j) {
+	private CellModel futureState(int i, int j) {
 		int neighborCount = liveNeighbors(i, j);
-		if (field[i][j].getState())
-			return neighborCount >= 2 && neighborCount <= 3;
-		return neighborCount == 3;
+		if (field[i][j].isAlive()) {
+			if (neighborCount >= 2 && neighborCount <= 3) // this block seems to be triggered when cell is dead
+				return new CellModel(field[i][j]);
+			else
+				return new CellModel();
+		} else {
+			if (neighborCount == 3)
+				return new CellModel(field[i][j]); // TODO change to correct age and Color for new cells
+			else
+				return new CellModel();
+		}
 	}
 
 	/**
@@ -87,49 +96,42 @@ public class Board {
 //		System.out.println("(" + (i - 1 + height) % height + ", " + j + 1 % width + ")");
 
 
-		if (field[(i - 1 + height) % height][(j - 1 + width) % width].getState())
+		if (field[(i - 1 + height) % height][(j - 1 + width) % width].isAlive())
 			liveNeighborCount++;
-		if (field[(i - 1 + height) % height][j].getState())
+		if (field[(i - 1 + height) % height][j].isAlive())
 			liveNeighborCount++;
-		if (field[(i - 1 + height) % height][(j + 1) % width].getState())
+		if (field[(i - 1 + height) % height][(j + 1) % width].isAlive())
 			liveNeighborCount++;
-		if (field[i][(j - 1 + width) % width].getState())
+		if (field[i][(j - 1 + width) % width].isAlive())
 			liveNeighborCount++;
-		if (field[i][(j + 1) % width].getState())
+		if (field[i][(j + 1) % width].isAlive())
 			liveNeighborCount++;
-		if (field[(i + 1) % height][(j - 1 + width) % width].getState())
+		if (field[(i + 1) % height][(j - 1 + width) % width].isAlive())
 			liveNeighborCount++;
-		if (field[(i + 1) % height][j].getState())
+		if (field[(i + 1) % height][j].isAlive())
 			liveNeighborCount++;
-		if (field[(i + 1) % height][(j + 1) % width].getState())
+		if (field[(i + 1) % height][(j + 1) % width].isAlive())
 			liveNeighborCount++;
 		return liveNeighborCount;
 	}
 
 	/**
 	 * Will bind the given BooleanProperty with the state of the cell
-	 * at the given coordinate.
-	 * @param stateProperty
+	 * at the given coordinate. TODO Update this comment
+	 * @param ageProperty
 	 * @param i
 	 * @param j
 	 */
-	public void bindToCell(BooleanProperty stateProperty, int i, int j) {
-		field[i][j].stateProperty().bindBidirectional(stateProperty);
-	}
-
-	/**
-	 * Will unbind the given BooleanProperty from the state of the cell
-	 * at the given coordinate.
-	 * @param stateProperty
-	 * @param i
-	 * @param j
-	 */
-	public void unBindToCell(BooleanProperty stateProperty, int i, int j) {
-		field[i][j].stateProperty().unbindBidirectional(stateProperty);
+	public void bindToCell(IntegerProperty ageProperty, int i, int j) {
+		field[i][j].ageProperty().bindBidirectional(ageProperty);
 	}
 
 	public boolean isPlaying() {
 		return running;
+	}
+
+	public CellModel getCellModel(int i, int j) {
+		return field[i][j];
 	}
 
 }

@@ -6,21 +6,24 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <children>
       <GridPane fx:id="pane" hgap="2.0" vgap="2.0">
 
 </GridPane>
 
-      <HBox>
+      <HBox alignment="CENTER_LEFT" spacing="5.0">
          <children>
-            <Button mnemonicParsing="false" text="Play" onAction="#playOrPause" fx:id="playButton">
+            <Button fx:id="playButton" mnemonicParsing="false" onAction="#playOrPause" text="Play">
                <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  <Insets />
                </HBox.margin>
             </Button>
+            <Button mnemonicParsing="false" onAction="#oneStep" text="Next Step" />
          </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
       </HBox>
    </children>
 </VBox>
