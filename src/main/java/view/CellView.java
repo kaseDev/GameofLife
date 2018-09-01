@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import model.CellModel;
+import model.Constants;
 
 import java.io.IOException;
 
@@ -27,23 +28,20 @@ public class CellView extends AnchorPane {
 		this.cellModel = new CellModel();
 		this.cellModel.bind(cellModel);
 		setOnMouseClicked(e -> reactToClick());
-		this.cellModel.ageProperty().addListener((e, oldVal, newVal) -> reactToStateChange(e, (int) oldVal, (int) newVal));
+		this.cellModel.ageProperty().addListener(e -> reactToStateChange());
 		x = i;
 		y = j;
 	}
 
 	private void reactToClick() {
-
-//		state.set(!state.get());
-
 		if (cellModel.isAlive()) {
-			cellModel.setAge(-1);
+			cellModel.setAge(Constants.DEAD);
 		} else {
-			cellModel.setAge(1);
+			cellModel.setAge(Constants.DEAD);
 		}
 	}
 
-	private void reactToStateChange(ObservableValue e, int oldVal, int newVal) {
+	private void reactToStateChange() {
 		if (cellModel.isAlive())
 			rect.setFill(Color.YELLOW);
 		else

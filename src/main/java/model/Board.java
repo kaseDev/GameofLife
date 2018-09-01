@@ -1,8 +1,10 @@
 package model;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 
+import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -76,13 +78,13 @@ public class Board {
 			if (neighborCount == 2 || neighborCount == 3) {
 				return new CellModel(field[i][j]);
 			} else {
-				return new CellModel(-1, -1);
+				return new CellModel(Constants.DEAD, Constants.DEAD);
 			}
 		} else {
 			if (neighborCount == 3) {
-				return new CellModel(turnCounter, -1); // TODO change to correct age and Color for new cells
+				return new CellModel(turnCounter, -1); // TODO change to correct Color for new cells
 			} else {
-				return new CellModel(-1, -1);
+				return new CellModel(Constants.DEAD, Constants.DEAD);
 			}
 		}
 	}

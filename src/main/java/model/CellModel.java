@@ -9,8 +9,8 @@ public class CellModel {
 	private IntegerProperty color;
 
 	public CellModel() {
-		age = new SimpleIntegerProperty(-1);
-		color = new SimpleIntegerProperty(-1);
+		age = new SimpleIntegerProperty(Constants.DEAD);
+		color = new SimpleIntegerProperty(Constants.DEAD);
 	}
 
 	public CellModel(int age, int color) {
@@ -53,7 +53,7 @@ public class CellModel {
 	}
 
 	public boolean isAlive() {
-		return age.get() != -1;
+		return age.get() != Constants.DEAD;
 	}
 
 	public void bind(CellModel cellModel) {
