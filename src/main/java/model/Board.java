@@ -12,6 +12,7 @@ public class Board {
 	private CellModel[][] buffer;
 	private int width, height;
 	private boolean running;
+	private int turnCounter;
 
 	private Timer timer;
 
@@ -19,10 +20,10 @@ public class Board {
 		this.width = width;
 		this.height = height;
 		running = false;
+		turnCounter = 0;
 		field = new CellModel[width][height];
 		buffer = new CellModel[width][height];
 		running = false;
-
 		for (int i = 0; i < field.length; i++)
 			for (int j = 0; j < field.length; j++) {
 				field[i][j] = new CellModel();
@@ -53,6 +54,7 @@ public class Board {
 	 * stores refreshes the board with the new values.
 	 */
 	public void calculateNextStep() {
+		turnCounter++;
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
 				buffer[i][j] = futureState(i, j);
@@ -71,15 +73,17 @@ public class Board {
 	private CellModel futureState(int i, int j) {
 		int neighborCount = liveNeighbors(i, j);
 		if (field[i][j].isAlive()) {
-			if (neighborCount >= 2 && neighborCount <= 3) // this block seems to be triggered when cell is dead
+			if (neighborCount == 2 || neighborCount == 3) {
 				return new CellModel(field[i][j]);
-			else
-				return new CellModel();
+			} else {
+				return new CellModel(-1, -1);
+			}
 		} else {
-			if (neighborCount == 3)
-				return new CellModel(field[i][j]); // TODO change to correct age and Color for new cells
-			else
-				return new CellModel();
+			if (neighborCount == 3) {
+				return new CellModel(turnCounter, -1); // TODO change to correct age and Color for new cells
+			} else {
+				return new CellModel(-1, -1);
+			}
 		}
 	}
 

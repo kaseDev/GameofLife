@@ -48,8 +48,6 @@ public class CellView extends AnchorPane {
 			rect.setFill(Color.YELLOW);
 		else
 			rect.setFill(Color.BLACK);
-		if ((newVal == -1 && oldVal != -1) || (newVal != -1 && oldVal == -1))
-			System.out.println("(" + x + ", " + y + "): " + oldVal + " -> " + newVal);
 	}
 
 	private void uglySetUpCode() {
