@@ -5,8 +5,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 
-<VBox xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<VBox xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameController">
    <children>
       <GridPane fx:id="pane" hgap="2.0" vgap="2.0">
 
@@ -20,6 +21,7 @@
                </HBox.margin>
             </Button>
             <Button mnemonicParsing="false" onAction="#oneStep" text="Next Step" />
+            <Rectangle fx:id="colorIndicator" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="18.0" onMouseClicked="#changeColor" stroke="BLACK" strokeType="INSIDE" width="18.0" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

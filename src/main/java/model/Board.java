@@ -1,12 +1,8 @@
 package model;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 
-import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class Board {
 
@@ -14,7 +10,7 @@ public class Board {
 	private CellModel[][] buffer;
 	private int width, height;
 	private boolean running;
-	private int turnCounter;
+	private int turnCount;
 
 	private Timer timer;
 
@@ -22,7 +18,7 @@ public class Board {
 		this.width = width;
 		this.height = height;
 		running = false;
-		turnCounter = 0;
+		turnCount = 0;
 		field = new CellModel[width][height];
 		buffer = new CellModel[width][height];
 		running = false;
@@ -56,7 +52,7 @@ public class Board {
 	 * stores refreshes the board with the new values.
 	 */
 	public void calculateNextStep() {
-		turnCounter++;
+		turnCount++;
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
 				buffer[i][j] = futureState(i, j);
@@ -70,23 +66,46 @@ public class Board {
 	 * provided coordinates is alive or dead.
 	 * @param i
 	 * @param j
-	 * @return TODO bug should probably around here!
+	 * @return
 	 */
 	private CellModel futureState(int i, int j) {
-		int neighborCount = liveNeighbors(i, j);
+		CellModel[] neighbors = liveNeighbors(i, j);
 		if (field[i][j].isAlive()) {
-			if (neighborCount == 2 || neighborCount == 3) {
+			if (neighbors.length == 2 || neighbors.length == 3) {
 				return new CellModel(field[i][j]);
 			} else {
 				return new CellModel(Constants.DEAD, Constants.DEAD);
 			}
 		} else {
-			if (neighborCount == 3) {
-				return new CellModel(turnCounter, -1); // TODO change to correct Color for new cells
+			if (neighbors.length == 3) {
+				return new CellModel(turnCount, calculateColor(neighbors));
+//				return new CellModel(turnCount, 0);
 			} else {
 				return new CellModel(Constants.DEAD, Constants.DEAD);
 			}
 		}
+	}
+
+	public int calculateColor(CellModel[] neighbors) {
+		Map<Integer, Integer> colorCount = new HashMap<>();
+		List<Integer> mostOccurred = new ArrayList<>();
+		int largestYet = 0;
+		for (CellModel neighbor : neighbors) {
+			Integer val = colorCount.get(neighbor.getColor());
+			if (val == null)
+				colorCount.put(neighbor.getColor(), 1);
+			else
+				colorCount.put(neighbor.getColor(), val+1);
+		}
+		for (Map.Entry<Integer, Integer> color : colorCount.entrySet()) {
+			if (color.getValue() == largestYet)
+				mostOccurred.add(color.getKey());
+			else if (color.getValue() > largestYet) {
+				mostOccurred.clear();
+				mostOccurred.add(color.getKey());
+			}
+		}
+		return mostOccurred.get(new Random().nextInt(mostOccurred.size()));
 	}
 
 	/**
@@ -96,40 +115,25 @@ public class Board {
 	 * @param j
 	 * @return
 	 */
-	private int liveNeighbors(int i, int j) {
-		int liveNeighborCount = 0;
-//		System.out.println("(" + i + ", " + j + ")");
-//		System.out.println("(" + (i - 1 + height) % height + ", " + j + 1 % width + ")");
-
-
+	private CellModel[] liveNeighbors(int i, int j) {
+		List<CellModel> neighborList = new ArrayList<>();
 		if (field[(i - 1 + height) % height][(j - 1 + width) % width].isAlive())
-			liveNeighborCount++;
+			neighborList.add(field[(i - 1 + height) % height][(j - 1 + width) % width]);
 		if (field[(i - 1 + height) % height][j].isAlive())
-			liveNeighborCount++;
+			neighborList.add(field[(i - 1 + height) % height][j]);
 		if (field[(i - 1 + height) % height][(j + 1) % width].isAlive())
-			liveNeighborCount++;
+			neighborList.add(field[(i - 1 + height) % height][(j + 1) % width]);
 		if (field[i][(j - 1 + width) % width].isAlive())
-			liveNeighborCount++;
+			neighborList.add(field[i][(j - 1 + width) % width]);
 		if (field[i][(j + 1) % width].isAlive())
-			liveNeighborCount++;
+			neighborList.add(field[i][(j + 1) % width]);
 		if (field[(i + 1) % height][(j - 1 + width) % width].isAlive())
-			liveNeighborCount++;
+			neighborList.add(field[(i + 1) % height][(j - 1 + width) % width]);
 		if (field[(i + 1) % height][j].isAlive())
-			liveNeighborCount++;
+			neighborList.add(field[(i + 1) % height][j]);
 		if (field[(i + 1) % height][(j + 1) % width].isAlive())
-			liveNeighborCount++;
-		return liveNeighborCount;
-	}
-
-	/**
-	 * Will bind the given BooleanProperty with the state of the cell
-	 * at the given coordinate. TODO Update this comment
-	 * @param ageProperty
-	 * @param i
-	 * @param j
-	 */
-	public void bindToCell(IntegerProperty ageProperty, int i, int j) {
-		field[i][j].ageProperty().bindBidirectional(ageProperty);
+			neighborList.add(field[(i + 1) % height][(j + 1) % width]);
+		return neighborList.toArray(new CellModel[0]);
 	}
 
 	public boolean isPlaying() {
@@ -138,6 +142,10 @@ public class Board {
 
 	public CellModel getCellModel(int i, int j) {
 		return field[i][j];
+	}
+
+	public int getTurnCount() {
+		return turnCount;
 	}
 
 }

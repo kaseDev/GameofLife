@@ -1,10 +1,6 @@
 package view;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
+import controller.GameController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -18,33 +14,36 @@ import java.io.IOException;
 public class CellView extends AnchorPane {
 
 	@FXML private Rectangle rect;
-//	private BooleanProperty state = new SimpleBooleanProperty(false);
 
 	private CellModel cellModel;
-	private int x,y;
+	private GameController controller;
+	private int x, y;
 
-	public CellView(int i, int j, CellModel cellModel) {
+	public CellView(int x, int y, GameController controller) {
 		uglySetUpCode();
 		this.cellModel = new CellModel();
-		this.cellModel.bind(cellModel);
+		this.x = x;
+		this.y = y;
+		this.controller = controller;
 		setOnMouseClicked(e -> reactToClick());
-		this.cellModel.ageProperty().addListener(e -> reactToStateChange());
-		x = i;
-		y = j;
+		this.cellModel.ageProperty().addListener(
+				(e, oldVal, newVal) -> reactToStateChange((int) oldVal, (int) newVal));
 	}
 
 	private void reactToClick() {
 		if (cellModel.isAlive()) {
+			cellModel.setColor(Constants.DEAD);
 			cellModel.setAge(Constants.DEAD);
 		} else {
-			cellModel.setAge(Constants.DEAD);
+			cellModel.setColor(controller.getColor());
+			cellModel.setAge(controller.getTurnCount());
 		}
 	}
 
-	private void reactToStateChange() {
-		if (cellModel.isAlive())
-			rect.setFill(Color.YELLOW);
-		else
+	private void reactToStateChange(int oldVal, int newVal) {
+		if (cellModel.isAlive()) {
+			rect.setFill(Constants.getColor(cellModel.getColor()));
+		} else
 			rect.setFill(Color.BLACK);
 	}
 
@@ -61,4 +60,7 @@ public class CellView extends AnchorPane {
 		rect = (javafx.scene.shape.Rectangle) getChildren().get(0);
 	}
 
+	public CellModel getCellModel() {
+		return cellModel;
+	}
 }

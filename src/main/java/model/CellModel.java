@@ -48,8 +48,8 @@ public class CellModel {
 	}
 
 	public void clone(CellModel model) {
-		this.age.set(model.age.get());
 		this.color.set(model.color.get());
+		this.age.set(model.age.get());
 	}
 
 	public boolean isAlive() {

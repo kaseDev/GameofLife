@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
 
 public class TitleScreenController {
 
-	private static final String MAIN_FXML = "main.fxml";
+	private static final String MAIN_FXML = "game.fxml";
 	private static final String SETTINGS_FXML = "settings.fxml";
 
 	private Stage primaryStage;
