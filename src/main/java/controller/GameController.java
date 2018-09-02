@@ -26,7 +26,7 @@ public class GameController {
 				pane.add(cellView, i, j);
 			}
 		}
-//		colorIndicator.setFill(Constants.getColor(curColor));
+		colorIndicator.setFill(Constants.getColor(curColor));
 	}
 
 	@FXML
