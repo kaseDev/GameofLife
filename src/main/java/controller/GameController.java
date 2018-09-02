@@ -8,9 +8,6 @@ import model.Board;
 import model.Constants;
 import view.CellView;
 
-
-// TODO fix bug of not closing program on closing window
-// by stopping the game loop on close
 public class GameController {
 
 	@FXML private GridPane pane;

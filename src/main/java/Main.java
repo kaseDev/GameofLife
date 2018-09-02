@@ -23,6 +23,7 @@ public class Main extends Application {
 			((TitleScreenController) loader.getController()).setPrimaryStage(primaryStage);
 			Scene scene = new Scene(parent);
 			primaryStage.setScene(scene);
+			primaryStage.setOnCloseRequest(e -> System.exit(0));
 			primaryStage.show();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
